@@ -2,11 +2,14 @@ package com.example.livestockvendorapp.Activity.Personpackage;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.example.livestockvendorapp.Adapter.ReviewAdapter;
 import com.example.livestockvendorapp.Model.Common;
 import com.example.livestockvendorapp.Model.Orderlist;
 import com.example.livestockvendorapp.R;
@@ -24,6 +27,10 @@ public class Personreview extends AppCompatActivity {
     TextView username, userrating, userearning;
     TextView userordercount;
     ArrayList<Orderlist> list = new ArrayList<>();
+    ReviewAdapter adapter;
+    RecyclerView recyclerView;
+//    float totalrating = 0, totalcost = 0;
+//    int totalcount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +41,8 @@ public class Personreview extends AppCompatActivity {
         userordercount = findViewById(R.id.user_ordercount);
         userrating = findViewById(R.id.user_rating);
 
-
+        recyclerView = findViewById(R.id.recyler_review);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         db = FirebaseFirestore.getInstance();
         set_Data();
     }
@@ -43,7 +51,7 @@ public class Personreview extends AppCompatActivity {
     public void set_Data() {
 
         username.setText(Common.currentuser.getName());
-        db.collection("Orderlist").whereEqualTo("status", "Completed").whereEqualTo("sellerphone", "+923219281126")
+        db.collection("Orderlist").whereEqualTo("status", "Completed").whereEqualTo("sellerphone", Common.currentuser.getPhone())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -51,18 +59,32 @@ public class Personreview extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             list.clear();
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("Tag", document.getId() + " => " + document.getData());
+                                //Log.d("Tag", document.getId() + " => " + document.getData());
                                 Orderlist order = document.toObject(Orderlist.class);
                                 order.setDocid(document.getId());
                                 list.add(order);
+                                Common.totalrating = Common.totalrating + order.getRating();
+                                Common.totalcost = Common.totalcost + Float.parseFloat(order.getPrice());
                             }
 
+                            set_text_values(list.size());
+                            adapter = new ReviewAdapter(list, getApplicationContext());
+                            recyclerView.setAdapter(adapter);
 
                         } else {
                             Log.w("Tag", "Error getting documents.", task.getException());
                         }
                     }
                 });
+
+    }
+
+
+    public void set_text_values(int value) {
+        Common.totalcount = value;
+        userrating.setText(Float.toString(Common.totalrating));
+        userearning.setText(Float.toString(Common.totalcost));
+        userordercount.setText(Integer.toString(value));
 
     }
 }

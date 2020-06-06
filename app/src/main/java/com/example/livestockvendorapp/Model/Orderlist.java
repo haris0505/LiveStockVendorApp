@@ -13,9 +13,10 @@ public class Orderlist {
     private String count;
     private List<String> order;
     private String status;
-    private  String docid;
+    private String docid;
     private String sellerphone;
-
+    private float rating;
+    private String review;
 
     public Orderlist() {
     }
@@ -27,7 +28,7 @@ public class Orderlist {
         this.price = price;
         this.count = count;
         this.order = order;
-        this.status=status;
+        this.status = status;
     }
 
 
@@ -38,9 +39,25 @@ public class Orderlist {
         this.price = price;
         this.count = count;
 
-        this.status=status;
+        this.status = status;
     }
 
+
+    public String getReview() {
+        return review;
+    }
+
+    public void setReview(String review) {
+        this.review = review;
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
 
     public List<String> getOrder() {
         return order;

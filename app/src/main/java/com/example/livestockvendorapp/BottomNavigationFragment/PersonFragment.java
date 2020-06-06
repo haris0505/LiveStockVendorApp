@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.livestockvendorapp.Activity.MapsActivity;
 import com.example.livestockvendorapp.Activity.Personpackage.Persondetail;
@@ -42,14 +43,15 @@ import io.paperdb.Paper;
  */
 public class PersonFragment extends Fragment {
 
-    FusedLocationProviderClient fusedLocationProviderClient;
+
     ListView listView;
     String[] listitem;
     TextView textView;
 
-
+    FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
+
     String address, City;
    // double longitude, latitude;
 
@@ -99,8 +101,7 @@ public class PersonFragment extends Fragment {
             intent = new Intent(getActivity(), Personreview.class);
             startActivity(intent);
         } else if (value == 2) {
-            intent = new Intent(getActivity(), MapsActivity.class);
-            startActivity(intent);
+            Toast.makeText(getActivity(),"Under development",Toast.LENGTH_SHORT).show();
         } else if (value == 3) {
             remove_values();
             getActivity().finish();
@@ -164,9 +165,7 @@ public class PersonFragment extends Fragment {
 
 
 
-    public void  update_database(){
 
-    }
 
     public void getlocation() {
         fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
