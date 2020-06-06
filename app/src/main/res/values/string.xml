@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="User_Option">ListView</string>
+    <string-array name="User_Option">
+        <item>User details</item>
+        <item>User Reviews</item>
+        <item>User Support</item>
+        <item>Signout</item>
+
+    </string-array>
+    <string name="title_activity_maps">Map</string>
+
+</resources>
