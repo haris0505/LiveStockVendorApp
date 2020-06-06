@@ -1,15 +1,24 @@
 package com.example.livestockvendorapp.BottomNavigationFragment;
 
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +28,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.livestockvendorapp.Activity.MainActivity;
 import com.example.livestockvendorapp.Activity.MapsActivity;
 import com.example.livestockvendorapp.Activity.Personpackage.Persondetail;
 import com.example.livestockvendorapp.Activity.Personpackage.Personreview;
@@ -48,11 +58,11 @@ public class PersonFragment extends Fragment {
     String[] listitem;
     TextView textView;
 
-    FusedLocationProviderClient fusedLocationProviderClient;
-    private LocationRequest locationRequest;
-    private LocationCallback locationCallback;
-
-    String address, City;
+//    FusedLocationProviderClient fusedLocationProviderClient;
+//    private LocationRequest locationRequest;
+//    private LocationCallback locationCallback;
+//
+//    String address, City;
    // double longitude, latitude;
 
     public PersonFragment() {
@@ -86,7 +96,7 @@ public class PersonFragment extends Fragment {
             }
         });
 
-        init();
+       // init();
         return view;
     }
 
@@ -120,84 +130,88 @@ public class PersonFragment extends Fragment {
     }
 
 
-    public void init() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(20 * 1000);
+//    public void init() {
+//        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+//        locationRequest = LocationRequest.create();
+//        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+//        locationRequest.setInterval(20 * 1000);
+//
+//
+//        locationCallback = new LocationCallback() {
+//            @Override
+//            public void onLocationResult(LocationResult locationResult) {
+//                super.onLocationResult(locationResult);
+//
+//                if (locationResult == null) {
+//                    return;
+//                } else {
+//
+//                    for (Location location : locationResult.getLocations()) {
+//
+//
+//                        if (location != null) {
+//                           Common. longitude = location.getLongitude();
+//                            Common.latitude = location.getLatitude();
+//                            Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+//
+//                            try {
+//                                List<Address> list = geocoder.getFromLocation(
+//                                        location.getLatitude(), location.getLongitude(), 1
+//                                );
+//
+//                                address = list.get(0).getAddressLine(0);
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        };
+//
+//
+//        getlocation();
+//    }
 
 
-        locationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-
-                if (locationResult == null) {
-                    return;
-                } else {
-
-                    for (Location location : locationResult.getLocations()) {
-
-
-                        if (location != null) {
-                           Common. longitude = location.getLongitude();
-                            Common.latitude = location.getLatitude();
-                            Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
-
-                            try {
-                                List<Address> list = geocoder.getFromLocation(
-                                        location.getLatitude(), location.getLongitude(), 1
-                                );
-
-                                address = list.get(0).getAddressLine(0);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-            }
-        };
-
-
-        getlocation();
-    }
 
 
 
+//    public void getlocation() {
+//        fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Location> task) {
+//
+//                Location location = task.getResult();
+//                if (location != null) {
+//
+//                    try {
+//                        Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+//                        List<Address> list = geocoder.getFromLocation(
+//                                location.getLatitude(), location.getLongitude(), 1
+//                        );
+//
+//                        address = list.get(0).getAddressLine(0);
+//                        Common.latitude = list.get(0).getLatitude();
+//                        Common.longitude = list.get(0).getLongitude();
+//                        City = list.get(0).getCountryName();
+//
+//                        Common.currentuser.setLocation(address);
+//                        //  textView.setText(Html.fromHtml("<font color='#6200EE'><b>Latitude:</b><br></font>" + list.get(0).getAddressLine(0)));
+//
+//
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        });
+//
+//
+//    }
 
 
-    public void getlocation() {
-        fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-
-                Location location = task.getResult();
-                if (location != null) {
-
-                    try {
-                        Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
-                        List<Address> list = geocoder.getFromLocation(
-                                location.getLatitude(), location.getLongitude(), 1
-                        );
-
-                        address = list.get(0).getAddressLine(0);
-                        Common.latitude = list.get(0).getLatitude();
-                        Common.longitude = list.get(0).getLongitude();
-                        City = list.get(0).getCountryName();
-
-                        Common.currentuser.setLocation(address);
-                        //  textView.setText(Html.fromHtml("<font color='#6200EE'><b>Latitude:</b><br></font>" + list.get(0).getAddressLine(0)));
 
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-
-
-    }
 
 }
