@@ -15,6 +15,9 @@ public class Common {
     public static double longitude = 0;
     public static double latitude = 0;
 
+
+    public static boolean isupdate=false;
+
     public static double totalrating = 0, totalcost = 0;
     public static int totalcount = 0;
 

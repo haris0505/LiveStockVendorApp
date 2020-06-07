@@ -7,6 +7,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -18,6 +20,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -57,9 +60,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final float DEFAULT_ZOOM = 15f;
 
     //widgets
-    private EditText mSearchText;
-    private ImageView mGps;
-
+    private EditText mSearchText, additionalloc;
+    private TextView currentloc;
+    private ImageView mGps, editlocation;
+    private Button updatebtn;
     //vars
     private Boolean mLocationPermissionsGranted = false;
     private GoogleMap mMap;
@@ -73,8 +77,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mSearchText = (EditText) findViewById(R.id.input_search);
         getLocationPermission();
         mGps = findViewById(R.id.ic_gps);
-        Places.initialize(getApplicationContext(),"@string/google_maps_key");
+        currentloc = findViewById(R.id.map_currentaddress_txt);
+        additionalloc = findViewById(R.id.map_addition_address);
+        editlocation = findViewById(R.id.change_address_btn);
+        updatebtn = findViewById(R.id.location_update);
 
+        Places.initialize(getApplicationContext(), "AIzaSyAcxHKkssH32qNiFnTB8MBvmX00IhZBL7w");
+
+
+        updatebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                setResult(Activity.RESULT_OK, intent);
+
+                String location = currentloc.getText().toString();
+
+                intent.putExtra("Orderid", location);
+                finish();
+            }
+        });
+
+
+        editlocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final AlertDialog alertDialog=new AlertDialog.Builder(MapsActivity.this).create();
+                alertDialog.setTitle("Enter the location");
+
+            }
+        });
     }
 
 
@@ -163,6 +196,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (list.size() > 0) {
             Address address = list.get(0);
 
+            currentloc.setText(address.getAddressLine(0));
+            Common.latitude = address.getLatitude();
+            Common.longitude = address.getLongitude();
             Log.d(TAG, "geoLocate: found a location: " + address.toString());
             //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
 
@@ -186,7 +222,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (task.isSuccessful()) {
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
-
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
                                     DEFAULT_ZOOM,
                                     "My Location");

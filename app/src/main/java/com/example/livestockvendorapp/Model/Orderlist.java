@@ -17,31 +17,21 @@ public class Orderlist {
     private String sellerphone;
     private float rating;
     private String review;
+    private  String payment;
+
 
     public Orderlist() {
     }
 
-    public Orderlist(String phone, String date, String location,double price, String count, List<String> order, String status) {
-        this.phone = phone;
-        this.date = date;
-        this.location = location;
-        this.price = price;
-        this.count = count;
-        this.order = order;
-        this.status = status;
+
+
+    public String getPayment() {
+        return payment;
     }
 
-
-    public Orderlist(String phone, String date, String location, double price, String count, String status) {
-        this.phone = phone;
-        this.date = date;
-        this.location = location;
-        this.price = price;
-        this.count = count;
-
-        this.status = status;
+    public void setPayment(String payment) {
+        this.payment = payment;
     }
-
 
     public String getReview() {
         return review;

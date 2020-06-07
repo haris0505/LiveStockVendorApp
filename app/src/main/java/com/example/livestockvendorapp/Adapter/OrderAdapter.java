@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.livestockvendorapp.Activity.CompleteStatusActivity;
 import com.example.livestockvendorapp.Activity.DeliveryStatusActivity;
 import com.example.livestockvendorapp.Activity.OrderdetailActivity;
 import com.example.livestockvendorapp.Interface.ItemClickListener;
@@ -62,7 +63,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
                 }else if(tab==1){
                     intent = new Intent(cx, DeliveryStatusActivity.class);
                 }else if(tab==2){
-                    intent = new Intent(cx, DeliveryStatusActivity.class);
+                    intent = new Intent(cx, CompleteStatusActivity.class);
                 }
 
                 //Intent intent = new Intent(cx, OrderdetailActivity.class);

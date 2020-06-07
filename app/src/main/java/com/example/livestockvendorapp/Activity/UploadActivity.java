@@ -20,12 +20,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.livestockvendorapp.Model.Animal;
 import com.example.livestockvendorapp.Model.Common;
 import com.example.livestockvendorapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.database.DataSnapshot;
@@ -34,6 +38,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -66,7 +71,9 @@ public class UploadActivity extends AppCompatActivity {
     ImagePicker imagePicker;
     AlertDialog dialog;
 
+    boolean ispicchange = false;
 
+    String Orderid;
     private final int PERMISSION_ALL = 1;
 
 
@@ -81,9 +88,10 @@ public class UploadActivity extends AppCompatActivity {
         };
 
         AnimalImagesRef = FirebaseStorage.getInstance().getReference();
-        AnimalsRef = FirebaseDatabase.getInstance().getReference("Animal");
+        // AnimalsRef = FirebaseDatabase.getInstance().getReference("Animal");
 
         db = FirebaseFirestore.getInstance();
+
 
         dialog = new SpotsDialog.Builder().setContext(UploadActivity.this).setCancelable(true).build();
         AddNewProductButton = findViewById(R.id.add_new_product);
@@ -94,6 +102,9 @@ public class UploadActivity extends AppCompatActivity {
         InputProductweight = findViewById(R.id.product_weight);
 
         chipGroup = findViewById(R.id.chip_group);
+
+
+        set_detail();
 
 
         InputProductImage.setOnClickListener(new View.OnClickListener() {
@@ -117,6 +128,7 @@ public class UploadActivity extends AppCompatActivity {
                     public void onImagePicked(Uri imageUri) {
                         Picasso.get().load(imageUri).into(InputProductImage);
                         ImageUri = imageUri;
+                        ispicchange = true;
 //                        UCrop.of(imageUri, getTempUri())
 //                                .withAspectRatio(1, 1)
 //                                .start(UploadActivity.this);
@@ -129,6 +141,7 @@ public class UploadActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ValidateProductData();
+
             }
         });
 
@@ -138,15 +151,49 @@ public class UploadActivity extends AppCompatActivity {
             public void onCheckedChanged(ChipGroup chipGroup, int i) {
                 Chip chip = chipGroup.findViewById(i);
                 if (chip != null) {
-                    Toast.makeText(getApplicationContext(), "" + chip.getText(), Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(getApplicationContext(), "" + chip.getText(), Toast.LENGTH_SHORT).show();
                     Type = chip.getText().toString();
 
                 }
             }
         });
 
+
     }
 
+
+    public void set_detail() {
+        if (Common.isupdate == true) {
+            Intent intent = getIntent();
+            Orderid = intent.getStringExtra("Orderid");
+
+
+            db.collection("Animal").document(Orderid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Animal animal = document.toObject(Animal.class);
+                            Picasso.get().load(animal.getImage()).into(InputProductImage);
+                            InputProductName.setText(animal.getName());
+                            InputProductweight.setText(animal.getWeight().replace("kg", "").trim());
+                            InputProductPrice.setText(Double.toString(animal.getCost()));
+                            InputProductDescription.setText(animal.getDescription());
+                            Type = animal.getType();
+                            ImageUri = Uri.parse(animal.getImage());
+                        }
+                    }
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getApplicationContext(), "Failed to load ", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
 
     private Uri getTempUri() {
         String dir = Environment.getExternalStorageDirectory() + File.separator + "Temp";
@@ -177,7 +224,12 @@ public class UploadActivity extends AppCompatActivity {
 
         } else {
             dialog.show();
-            StoreProductInformation();
+            if (ispicchange) {
+                StoreProductInformation();
+            } else {
+                SaveProductInfoToDatabase();
+            }
+
         }
     }
 
@@ -193,6 +245,7 @@ public class UploadActivity extends AppCompatActivity {
             public void onFailure(@NonNull Exception e) {
                 Log.i("Error", "On failure " + e.getMessage());
                 Toast.makeText(getApplicationContext(), "Image not uploaded", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -227,51 +280,47 @@ public class UploadActivity extends AppCompatActivity {
     }
 
     private void SaveProductInfoToDatabase() {
-        AnimalsRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(productRandomKey).exists()) {
-                    //Toast.makeText(getApplicationContext(), "Product exits", Toast.LENGTH_SHORT).show();
-                } else {
+        Map<String, Object> map = new HashMap<>();
 
-                    Map<String, Object> map = new HashMap<>();
+        map.put("Cost", Double.parseDouble(InputProductPrice.getText().toString()));
+        map.put("Name", InputProductName.getText().toString());
+        map.put("Weight", weight);
+        map.put("Description", Description);
+        map.put("Type", Type);
+        map.put("Seller_id", Common.currentuser.getPhone());
+        map.put("Status", "Not Sell");
+        map.put("Image", downloadImageUrl);
 
-                    map.put("Cost", Double.parseDouble(InputProductPrice.getText().toString()));
-                    map.put("Name", InputProductName.getText().toString());
-                    map.put("Weight", weight);
-                    map.put("Description", Description);
-                    map.put("Image", downloadImageUrl);
-                    map.put("Seller_id", Common.currentuser.getPhone());
-                    map.put("Type", Type);
-                    map.put("Status", "Not Sell");
+        if (Common.isupdate == true) {
+            db.collection("Animal").document(Orderid).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Toast.makeText(getApplicationContext(), "File update", Toast.LENGTH_SHORT).show();
+                    Common.isupdate = false;
+                }
+            });
+        } else {
 
-                    db.collection("Animal")
-                            .add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            Log.d("fileupload", "DocumentSnapshot added with ID: " + documentReference.getId());
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w("fileupload", "Error adding document", e);
-                        }
-                    });
+            db.collection("Animal")
+                    .add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    Log.d("fileupload", "DocumentSnapshot added with ID: " + documentReference.getId());
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.w("fileupload", "Error adding document", e);
+                }
+            });
+        }
+
+
 //                    Animal object = new Animal(Price, Description, downloadImageUrl, Pname, Common.currentuser.getPhone(), Type, "NotSell");
 //                    AnimalsRef.child(productRandomKey).setValue(object);
-                    Toast.makeText(getApplicationContext(), "Object added", Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
-                    finish();
-
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        Toast.makeText(getApplicationContext(), "Object added", Toast.LENGTH_SHORT).show();
+        dialog.dismiss();
+        finish();
 
 
     }

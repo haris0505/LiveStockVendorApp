@@ -1,11 +1,10 @@
 package com.example.livestockvendorapp.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,11 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.livestockvendorapp.Activity.UploadActivity;
 import com.example.livestockvendorapp.Interface.ItemClickListener;
 import com.example.livestockvendorapp.Model.Animal;
+import com.example.livestockvendorapp.Model.Common;
 import com.example.livestockvendorapp.R;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -53,7 +52,16 @@ public class MyUploadAnimalAdapter extends RecyclerView.Adapter<MyUploadAnimalAd
         holder.SetItemClickListner(new ItemClickListener() {
             @Override
             public void onClick(View view, int position, boolean isLongClick) {
-                Toast.makeText(cx, "", Toast.LENGTH_SHORT).show();
+
+                if(list.get(position).getStatus().equalsIgnoreCase("Not Sell")){
+                    Common.isupdate = true;
+                    Intent intent = new Intent(cx, UploadActivity.class);
+                    intent.putExtra("Orderid", list.get(position).getDocid());
+                    cx.startActivity(intent);
+                }else{
+                    Toast.makeText(cx,"Animal is sell",Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
