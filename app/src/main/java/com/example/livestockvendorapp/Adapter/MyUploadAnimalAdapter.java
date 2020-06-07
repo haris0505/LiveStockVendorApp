@@ -45,7 +45,7 @@ public class MyUploadAnimalAdapter extends RecyclerView.Adapter<MyUploadAnimalAd
     @Override
     public void onBindViewHolder(@NonNull AnimalViewHolder holder, int position) {
         Picasso.get().load(list.get(position).getImage()).into(holder.imageView);
-        holder.cost.setText(list.get(position).getCost());
+        holder.cost.setText(Double.toString(list.get(position).getCost()));
         holder.name.setText(list.get(position).getName());
         holder.weight.setText(list.get(position).getWeight());
 

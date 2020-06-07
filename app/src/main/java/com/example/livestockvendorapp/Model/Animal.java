@@ -3,7 +3,7 @@ package com.example.livestockvendorapp.Model;
 public class Animal {
 
 
-    String Cost;
+    double Cost;
     String Weight;
     String Image;
     String Name;
@@ -16,7 +16,7 @@ public class Animal {
     public Animal() {
     }
 
-    public Animal(String cost, String weight, String description, String image, String name, String seller_id, String type, String status) {
+    public Animal(double cost, String weight, String description, String image, String name, String seller_id, String type, String status) {
         Cost = cost;
         Weight = weight;
         Description = description;
@@ -28,11 +28,11 @@ public class Animal {
     }
 
 
-    public String getCost() {
+    public double getCost() {
         return Cost;
     }
 
-    public void setCost(String cost) {
+    public void setCost(double cost) {
         Cost = cost;
     }
 

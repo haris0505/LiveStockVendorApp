@@ -9,7 +9,7 @@ public class Orderlist {
     private String phone;
     private String date;
     private String location;
-    private String price;
+    private double price;
     private String count;
     private List<String> order;
     private String status;
@@ -21,7 +21,7 @@ public class Orderlist {
     public Orderlist() {
     }
 
-    public Orderlist(String phone, String date, String location, String price, String count, List<String> order, String status) {
+    public Orderlist(String phone, String date, String location,double price, String count, List<String> order, String status) {
         this.phone = phone;
         this.date = date;
         this.location = location;
@@ -32,7 +32,7 @@ public class Orderlist {
     }
 
 
-    public Orderlist(String phone, String date, String location, String price, String count, String status) {
+    public Orderlist(String phone, String date, String location, double price, String count, String status) {
         this.phone = phone;
         this.date = date;
         this.location = location;
@@ -91,11 +91,11 @@ public class Orderlist {
         this.location = location;
     }
 
-    public String getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 

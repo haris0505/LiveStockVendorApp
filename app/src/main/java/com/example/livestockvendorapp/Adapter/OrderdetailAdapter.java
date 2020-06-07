@@ -46,7 +46,7 @@ public class OrderdetailAdapter extends  RecyclerView.Adapter<OrderdetailAdapter
 
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
-        holder.time.setText(orderlists.get(position).getCost());
+        holder.time.setText(Double.toString(orderlists.get(position).getCost()));
         holder.orderid.setText(orderlists.get(position).getName());
         holder.count.setText(orderlists.get(position).getType());
         Picasso.get().load(orderlists.get(position).getImage()).into(holder.img);

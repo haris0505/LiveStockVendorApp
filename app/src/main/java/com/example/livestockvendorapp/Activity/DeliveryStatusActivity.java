@@ -91,7 +91,7 @@ public class DeliveryStatusActivity extends AppCompatActivity {
                     if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         Animal animal = document.toObject(Animal.class);
-                        cost= cost+Double.parseDouble(animal.getCost());
+                        cost= cost+animal.getCost();
                         //Log.d(TAG, "cost: " + cost);
                         cost_text.setText( Double.toString(cost));
                         animalList.add(animal);

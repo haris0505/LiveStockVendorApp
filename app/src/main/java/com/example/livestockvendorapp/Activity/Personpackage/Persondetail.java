@@ -95,8 +95,8 @@ public class Persondetail extends AppCompatActivity {
         userlocation.setText(Common.currentuser.getLocation());
         username.setText(Common.currentuser.getName());
 
-        userrating.setText(Float.toString(Common.totalrating));
-        userearning.setText(Float.toString(Common.totalcost));
+        userrating.setText(Double.toString(Common.totalrating));
+        userearning.setText(Double.toString(Common.totalcost));
         userordercount.setText(Integer.toString(Common.totalcount));
 
 

@@ -15,7 +15,7 @@ public class Common {
     public static double longitude = 0;
     public static double latitude = 0;
 
-    public static float totalrating = 0, totalcost = 0;
+    public static double totalrating = 0, totalcost = 0;
     public static int totalcount = 0;
 
     public static void insert(Orderlist value) {

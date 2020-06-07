@@ -64,7 +64,7 @@ public class Personreview extends AppCompatActivity {
                                 order.setDocid(document.getId());
                                 list.add(order);
                                 Common.totalrating = Common.totalrating + order.getRating();
-                                Common.totalcost = Common.totalcost + Float.parseFloat(order.getPrice());
+                                Common.totalcost = Common.totalcost + order.getPrice();
                             }
 
                             set_text_values(list.size());
@@ -82,8 +82,8 @@ public class Personreview extends AppCompatActivity {
 
     public void set_text_values(int value) {
         Common.totalcount = value;
-        userrating.setText(Float.toString(Common.totalrating));
-        userearning.setText(Float.toString(Common.totalcost));
+        userrating.setText(Double.toString(Common.totalrating));
+        userearning.setText(Double.toString(Common.totalcost));
         userordercount.setText(Integer.toString(value));
 
     }
