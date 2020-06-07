@@ -37,22 +37,23 @@ public class MyUploadAnimalAdapter extends RecyclerView.Adapter<MyUploadAnimalAd
     @NonNull
     @Override
     public AnimalViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view=LayoutInflater.from(parent.getContext()).inflate(R.layout.animal_row,parent,false);
-        return  new AnimalViewHolder(view);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.animal_row, parent, false);
+        return new AnimalViewHolder(view);
 
     }
 
     @Override
     public void onBindViewHolder(@NonNull AnimalViewHolder holder, int position) {
         Picasso.get().load(list.get(position).getImage()).into(holder.imageView);
-        holder.cost.setText("Rs:"+Double.toString(list.get(position).getCost()));
+        holder.cost.setText("Rs:" + Double.toString(list.get(position).getCost()));
         holder.name.setText(list.get(position).getName());
         holder.weight.setText(list.get(position).getWeight());
+        holder.status.setText(list.get(position).getStatus());
 
         holder.SetItemClickListner(new ItemClickListener() {
             @Override
             public void onClick(View view, int position, boolean isLongClick) {
-                Toast.makeText(cx,"",Toast.LENGTH_SHORT).show();
+                Toast.makeText(cx, "", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -65,17 +66,18 @@ public class MyUploadAnimalAdapter extends RecyclerView.Adapter<MyUploadAnimalAd
 
     class AnimalViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView name,cost,weight;
+        TextView name, cost, weight, status;
         ImageView imageView;
         private ItemClickListener itemClickListener;
 
 
         public AnimalViewHolder(@NonNull View itemView) {
             super(itemView);
-            name=itemView.findViewById(R.id.animal_name);
-            cost=itemView.findViewById(R.id.animal_cost);
-            weight=itemView.findViewById(R.id.animal_weight);
-            imageView=itemView.findViewById(R.id.animal_img);
+            name = itemView.findViewById(R.id.animal_name);
+            cost = itemView.findViewById(R.id.animal_cost);
+            weight = itemView.findViewById(R.id.animal_weight);
+            status = itemView.findViewById(R.id.animal_status);
+            imageView = itemView.findViewById(R.id.animal_img);
 
             itemView.setOnClickListener(this);
 
@@ -83,12 +85,12 @@ public class MyUploadAnimalAdapter extends RecyclerView.Adapter<MyUploadAnimalAd
 
         @Override
         public void onClick(View view) {
-            itemClickListener.onClick(view,getAdapterPosition(),false);
+            itemClickListener.onClick(view, getAdapterPosition(), false);
 
         }
 
-        private void SetItemClickListner(ItemClickListener itemClickListener){
-            this.itemClickListener=itemClickListener;
+        private void SetItemClickListner(ItemClickListener itemClickListener) {
+            this.itemClickListener = itemClickListener;
         }
 
     }
