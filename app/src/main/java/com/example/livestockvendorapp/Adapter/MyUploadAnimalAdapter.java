@@ -26,8 +26,8 @@ import java.util.List;
 public class MyUploadAnimalAdapter extends RecyclerView.Adapter<MyUploadAnimalAdapter.AnimalViewHolder> {
 
 
-    List<Animal> list;
-    Context cx;
+    private List<Animal> list;
+    private Context cx;
 
     public MyUploadAnimalAdapter(List<Animal> list, Context cx) {
         this.list = list;
@@ -87,7 +87,7 @@ public class MyUploadAnimalAdapter extends RecyclerView.Adapter<MyUploadAnimalAd
 
         }
 
-        public void SetItemClickListner(ItemClickListener itemClickListener){
+        private void SetItemClickListner(ItemClickListener itemClickListener){
             this.itemClickListener=itemClickListener;
         }
 

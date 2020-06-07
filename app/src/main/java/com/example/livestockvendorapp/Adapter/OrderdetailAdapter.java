@@ -24,9 +24,9 @@ import java.util.List;
 public class OrderdetailAdapter extends  RecyclerView.Adapter<OrderdetailAdapter.OrderViewHolder>{
 
 
-    List<Animal> orderlists;
+    private List<Animal> orderlists;
 
-    Context cx;
+    private Context cx;
 
 
     public OrderdetailAdapter(Context context, List<Animal> order) {

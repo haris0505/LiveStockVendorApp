@@ -236,7 +236,7 @@ public class UploadActivity extends AppCompatActivity {
 
                     Map<String, Object> map = new HashMap<>();
 
-                    map.put("Cost", InputProductPrice.getText());
+                    map.put("Cost", Double.parseDouble(InputProductPrice.getText().toString()));
                     map.put("Name", InputProductName.getText().toString());
                     map.put("Weight", weight);
                     map.put("Description", Description);
